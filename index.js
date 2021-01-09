@@ -71,5 +71,5 @@ app.route('/unlock')
       .then(state => res.status(status.OK).json(state)))
 
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || config.port || 3000;
 app.listen(port, () => console.log(`gosho listening to port ${port}`));
