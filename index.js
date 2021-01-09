@@ -46,13 +46,16 @@ const processState = (data) => {
 }
 
 app.route('/status')
-  .get((req, res) => {
+  .get((req, res) =>
     request.get(`${config.url}/ioreg.js`)
       .auth(config.username, config.password)
       .then(res => res.body.toString())
       .then(processState)
-      .then(state => res.status(status.OK).json(state));
-  })
+      .then(state => res.status(status.OK).json(state))
+      .catch(err => {
+        console.log(err);
+        res.status(status.OK).json({latch: 'unknown', door: 'unknown'});
+      }))
 
 app.route('/lock')
   .post((req, res) =>
@@ -60,7 +63,11 @@ app.route('/lock')
       .auth(config.username, config.password)
       .then(res => res.body.toString())
       .then(processState)
-      .then(state => res.status(status.OK).json(state)))
+      .then(state => res.status(status.OK).json(state))
+      .catch(err => {
+        console.log(err);
+        res.status(status.OK).json({latch: 'unknown', door: 'unknown'});
+      }))
 
 app.route('/unlock')
   .post((req, res) =>
@@ -68,7 +75,11 @@ app.route('/unlock')
       .auth(config.username, config.password)
       .then(res => res.body.toString())
       .then(processState)
-      .then(state => res.status(status.OK).json(state)))
+      .then(state => res.status(status.OK).json(state))
+      .catch(err => {
+        console.log(err);
+        res.status(status.OK).json({latch: 'unknown', door: 'unknown'});
+      }))
 
 
 const port = process.env.PORT || config.port || 3000;
