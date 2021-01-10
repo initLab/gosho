@@ -74,7 +74,7 @@ app.route('/lock')
   .post((req, res) =>
     request.get(`${config.door.url}/iochange.cgi?ref=ioreg.js&09=01`)
       .auth(config.door.username, config.door.password)
-      .then(sleep(500))
+      .then(() => sleep(500))
       .then(getState)
       .then(state => {
         res.status(status.OK).json(state);
@@ -89,7 +89,7 @@ app.route('/unlock')
   .post((req, res) =>
     request.get(`${config.door.url}/iochange.cgi?ref=ioreg.js&09=00`)
       .auth(config.door.username, config.door.password)
-      .then(sleep(500))
+      .then(() => sleep(500))
       .then(getState)
       .then(state => {
         res.status(status.OK).json(state);
