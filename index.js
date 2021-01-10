@@ -45,12 +45,16 @@ const processState = (data) => {
   return state;
 }
 
+const getState = () => request.get(`${config.url}/ioreg.js`)
+  .auth(config.username, config.password)
+  .then(res => res.body.toString())
+  .then(processState)
+
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
 app.route('/status')
   .get((req, res) =>
-    request.get(`${config.url}/ioreg.js`)
-      .auth(config.username, config.password)
-      .then(res => res.body.toString())
-      .then(processState)
+    getState()
       .then(state => res.status(status.OK).json(state))
       .catch(err => {
         console.log(err);
@@ -61,8 +65,8 @@ app.route('/lock')
   .post((req, res) =>
     request.get(`${config.url}/iochange.cgi?ref=ioreg.js&09=01`)
       .auth(config.username, config.password)
-      .then(res => res.body.toString())
-      .then(processState)
+      .then(sleep(500))
+      .then(getState())
       .then(state => res.status(status.OK).json(state))
       .catch(err => {
         console.log(err);
@@ -73,8 +77,8 @@ app.route('/unlock')
   .post((req, res) =>
     request.get(`${config.url}/iochange.cgi?ref=ioreg.js&09=00`)
       .auth(config.username, config.password)
-      .then(res => res.body.toString())
-      .then(processState)
+      .then(sleep(500))
+      .then(getState())
       .then(state => res.status(status.OK).json(state))
       .catch(err => {
         console.log(err);
