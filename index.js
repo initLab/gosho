@@ -11,7 +11,6 @@ const bodyParser = require('body-parser');
 const methodOverride = require('method-override');
 // const cors = require('cors');
 // const morgan = require('morgan');
-const mqtt = require('mqtt');
 const request = require('superagent')
 const config = require('./config.json');
 
@@ -20,6 +19,9 @@ const app = express();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(methodOverride());
+
+const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+const capitalize = str => str[0].toUpperCase() + str.slice(1);
 
 const processState = (data) => {
   let ioString = data.match(/var\ IO\=\"([0-9A-Z,]+)\"/);
@@ -45,12 +47,19 @@ const processState = (data) => {
   return state;
 }
 
-const getState = () => request.get(`${config.url}/ioreg.js`)
-  .auth(config.username, config.password)
+const getState = () => request.get(`${config.door.url}/ioreg.js`)
+  .auth(config.door.username, config.door.password)
   .then(res => res.body.toString())
   .then(processState)
 
-const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+const notify = state => request.post(config.notifier.url)
+   .send({
+     latch: capitalize(state.latch),
+     door: capitalize(state.door),
+     token: config.notifier.token
+   })
+   .then(res => console.log(res.body))
+   .catch(err => console.log(err));
 
 app.route('/status')
   .get((req, res) =>
@@ -63,11 +72,14 @@ app.route('/status')
 
 app.route('/lock')
   .post((req, res) =>
-    request.get(`${config.url}/iochange.cgi?ref=ioreg.js&09=01`)
-      .auth(config.username, config.password)
+    request.get(`${config.door.url}/iochange.cgi?ref=ioreg.js&09=01`)
+      .auth(config.door.username, config.door.password)
       .then(sleep(500))
       .then(getState())
-      .then(state => res.status(status.OK).json(state))
+      .then(state => {
+        res.status(status.OK).json(state);
+        notify(state);
+      })
       .catch(err => {
         console.log(err);
         res.status(status.OK).json({latch: 'unknown', door: 'unknown'});
@@ -75,11 +87,14 @@ app.route('/lock')
 
 app.route('/unlock')
   .post((req, res) =>
-    request.get(`${config.url}/iochange.cgi?ref=ioreg.js&09=00`)
-      .auth(config.username, config.password)
+    request.get(`${config.door.url}/iochange.cgi?ref=ioreg.js&09=00`)
+      .auth(config.door.username, config.door.password)
       .then(sleep(500))
       .then(getState())
-      .then(state => res.status(status.OK).json(state))
+      .then(state => {
+        res.status(status.OK).json(state);
+        notify(state);
+      })
       .catch(err => {
         console.log(err);
         res.status(status.OK).json({latch: 'unknown', door: 'unknown'});

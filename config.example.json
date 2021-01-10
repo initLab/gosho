@@ -1,0 +1,12 @@
+{
+  "port": 3000,
+  "door": {
+    "url": "http://urltoneomontana.com",
+    "username": "username",
+    "password": "password"
+  },
+  "notifier": {
+    "url": "http://urltonotifier.com",
+    "token": "some-text-here-as-a-placeholder"
+  }
+}
