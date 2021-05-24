@@ -1,12 +1,26 @@
 {
-  "port": 3000,
-  "door": {
-    "url": "http://urltoneomontana.com",
-    "username": "username",
-    "password": "password"
-  },
-  "notifier": {
-    "url": "http://urltonotifier.com",
-    "token": "some-text-here-as-a-placeholder"
-  }
+	"port": 3000,
+	"door": {
+		"backend": "netcontrol",
+		"params": {
+			"url": "http://example.com",
+			"username": "example",
+			"password": "example",
+			"latchControlPin": "09",
+			"doorStatePin": "24",
+			"lockButtonPin": "25",
+			"unlockButtonPin": "26",
+			"lockedSensorPin": "27",
+			"unlockedSensorPin": "28"
+		}
+//		"backend": "dummy",
+//		"params": {
+//			"door": "closed",
+//			"latch": "locked"
+//		}
+	},
+	"notifier": {
+		"url": "http://urltonotifier.com",
+		"token": "some-text-here-as-a-placeholder"
+	}
 }
