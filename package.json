@@ -2,9 +2,9 @@
   "name": "initlab-gosho",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "PORT=3000 supervisor -i node_modules -w index.js index.js"
+    "dev": "PORT=3000 supervisor -i node_modules -w server.js server.js"
   },
   "author": "",
   "license": "ISC",
