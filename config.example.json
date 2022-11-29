@@ -6,12 +6,11 @@
 			"url": "http://example.com",
 			"username": "example",
 			"password": "example",
-			"latchControlPin": "09",
-			"doorStatePin": "24",
-			"lockButtonPin": "25",
-			"unlockButtonPin": "26",
-			"lockedSensorPin": "27",
-			"unlockedSensorPin": "28"
+			"lockMacroNumber": "00",
+			"unlockMacroNumber": "01",
+			"doorLockedPin": "27",
+			"doorUnlockedPin": "28",
+			"doorClosedPin": "29"
 		}
 //		"backend": "dummy",
 //		"params": {
