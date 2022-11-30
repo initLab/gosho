@@ -22,9 +22,9 @@ const NetcontrolBackend = config => {
 					let arr = ioString[1].split(',');
 					console.log(arr);
 					let sensors = {
-						doorLocked: parseInt(arr[config.doorLockedPin], 16) < 512,
-						doorUnlocked: parseInt(arr[config.doorUnlockedPin], 16) < 512,
-						doorClosed: parseInt(arr[config.doorClosedPin], 16) < 512,
+						doorLocked: parseInt(arr[config.doorLockedPin], 16) >= 512,
+						doorUnlocked: parseInt(arr[config.doorUnlockedPin], 16) >= 512,
+						doorClosed: parseInt(arr[config.doorClosedPin], 16) >= 512,
 					};
 					console.log(sensors)
 					let state = {
