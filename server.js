@@ -58,4 +58,5 @@ app.route('/unlock')
 		.then(getState(res, true)));
 
 const port = process.env.PORT || config.port || 3000;
-app.listen(port, () => console.log(`gosho listening to port ${port}`));
+const bindHost = process.env.BINDHOST || config.bindHost || '127.0.0.1';
+app.listen(port, bindHost, () => console.log(`gosho listening on ${bindHost}:${port}`));
